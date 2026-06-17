@@ -8,7 +8,7 @@
 -- CREATE EXTENSION IF NOT EXISTS age;
 
 SET client_encoding = 'UTF8';
-CREATE SCHEMA public;
+CREATE SCHEMA IF NOT EXISTS public;
 
 -- ============================================================
 -- Common: update_time trigger function

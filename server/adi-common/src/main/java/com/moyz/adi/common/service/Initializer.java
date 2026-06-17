@@ -14,6 +14,7 @@ import dev.langchain4j.store.embedding.EmbeddingStore;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -45,7 +46,7 @@ public class Initializer {
     private AliyunOssFileHelper aliyunOssFileHelper;
 
     @Lazy
-    @Resource
+    @Autowired(required = false)
     private GraphStore kbGraphStore;
     @Lazy
     @Resource
@@ -80,7 +81,11 @@ public class Initializer {
         EmbeddingRagContext.add(new EmbeddingRag(AdiConstant.RetrieveContentFrom.CHARACTER_MEMORY, embeddingModel, characterMemoryEmbeddingStore));
         EmbeddingRagContext.add(new EmbeddingRag(AdiConstant.RetrieveContentFrom.WEB, embeddingModel, aiSearchEmbeddingStore));
 
-        GraphRagContext.add(new GraphRag(AdiConstant.RetrieveContentFrom.KNOWLEDGE_BASE, kbGraphStore));
+        if (kbGraphStore != null) {
+            GraphRagContext.add(new GraphRag(AdiConstant.RetrieveContentFrom.KNOWLEDGE_BASE, kbGraphStore));
+        } else {
+            log.warn("GraphStore is not configured, GraphRag is disabled");
+        }
     }
 
     /**

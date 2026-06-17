@@ -27,6 +27,10 @@ public class GoogleSearchEngineService extends AbstractSearchEngineService<Googl
 
     @Override
     protected void initSearchEngine() {
+        if (StringUtils.isAnyBlank(setting.getKey(), setting.getCx())) {
+            log.warn("Google Custom Search is disabled, apiKey or cseId is not configured");
+            return;
+        }
         AdiGoogleCustomWebSearchEngine.AdiGoogleCustomWebSearchEngineBuilder builder = AdiGoogleCustomWebSearchEngine.builder()
                 .apiKey(setting.getKey())
                 .csi(setting.getCx())
@@ -50,6 +54,10 @@ public class GoogleSearchEngineService extends AbstractSearchEngineService<Googl
         SearchReturn result = new SearchReturn();
         List<SearchReturnWebPage> items = new ArrayList<>();
         result.setItems(items);
+        if (null == searchEngine) {
+            log.warn("Google search engine is not initialized");
+            return result;
+        }
         if (StringUtils.isBlank(searchTxt)) {
             log.warn("google search terms is empty");
             return result;

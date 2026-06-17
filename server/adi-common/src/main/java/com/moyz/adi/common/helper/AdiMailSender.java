@@ -37,6 +37,19 @@ public class AdiMailSender {
         if (StringUtils.isAnyBlank(senderMail, to)) {
             return;
         }
+        // Mail server not configured (placeholder value), print to console instead
+        if (StringUtils.isBlank(senderMail) || !senderMail.contains("@") || senderMail.startsWith("your-")) {
+            log.warn("============================================================");
+            log.warn("Mail server is not configured, email content printed to console:");
+            log.warn("To: {}", to);
+            if (StringUtils.isNotBlank(cc)) {
+                log.warn("Cc: {}", cc);
+            }
+            log.warn("Subject: {}", subject);
+            log.warn("Content: {}", content);
+            log.warn("============================================================");
+            return;
+        }
         CustomMailInfo customMailInfo = new CustomMailInfo();
         customMailInfo.setSenderMail(senderMail);
         customMailInfo.setSenderName(appName);

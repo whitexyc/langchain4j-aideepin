@@ -39,18 +39,30 @@ public class SpringUtil implements ApplicationContextAware {
     }
 
     public static String getMessage(String key) {
+        if (applicationContext == null) {
+            log.warn("ApplicationContext is not initialized, returning raw key: {}", key);
+            return key;
+        }
         MessageSource messageSource = applicationContext.getBean(MessageSource.class);
         Locale locale = getCurrentUserLocale();
         return messageSource.getMessage(key, null, locale);
     }
 
     public static String getMessage(String key, String... args) {
+        if (applicationContext == null) {
+            log.warn("ApplicationContext is not initialized, returning raw key: {}", key);
+            return key;
+        }
         MessageSource messageSource = applicationContext.getBean(MessageSource.class);
         Locale locale = getCurrentUserLocale();
         return messageSource.getMessage(key, args, locale);
     }
 
     public static String getMessage(String key, Locale locale, String... args) {
+        if (applicationContext == null) {
+            log.warn("ApplicationContext is not initialized, returning raw key: {}", key);
+            return key;
+        }
         MessageSource messageSource = applicationContext.getBean(MessageSource.class);
         return messageSource.getMessage(key, args, locale);
     }
